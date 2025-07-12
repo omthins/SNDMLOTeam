@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNDMLO工具箱下载 - WinUI 3风格</title>
+    <style>
+        :root {
+            /* WinUI 3 设计变量 */
+            --winui-elevation-4: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 4px 5px 0 rgba(0, 0, 0, 0.07), 0 1px 10px 0 rgba(0, 0, 0, 0.06);
+            --winui-elevation-8: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 10px 12px -6px rgba(0, 0, 0, 0.1);
+            --winui-elevation-16: 0 8px 10px -5px rgba(0, 0, 0, 0.1), 0 16px 24px 2px rgba(0, 0, 0, 0.04), 0 6px 30px 5px rgba(0, 0, 0, 0.05);
+            
+            /* 浅色主题变量 */
+            --bg-primary: #f3f3f3;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f7f7f7;
+            --text-primary: #000000;
+            --text-secondary: #6d6d6d;
+            --accent-color: #0078d7;
+            --accent-color-light: #d7ebf9;
+            --border-radius: 8px;
+            --nav-active: rgba(0, 120, 215, 0.1);
+            --nav-hover: rgba(0, 0, 0, 0.04);
+            --blur-bg: rgba(255, 255, 255, 0.6);
+            --card-hover: rgba(0, 0, 0, 0.02);
+        }
+
+        /* 深色主题变量 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #202020;
+                --bg-secondary: #2d2d2d;
+                --bg-tertiary: #252525;
+                --text-primary: #ffffff;
+                --text-secondary: #a0a0a0;
+                --accent-color: #3aa0f3;
+                --accent-color-light: #1f1f4a;
+                --nav-active: rgba(58, 160, 243, 0.2);
+                --nav-hover: rgba(255, 255, 255, 0.05);
+                --blur-bg: rgba(45, 45, 45, 0.6);
+                --card-hover: rgba(255, 255, 255, 0.03);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            padding-top: 64px; /* 为顶部导航栏留出空间 */
+            min-height: 100vh;
+        }
+
+        /* WinUI 3 顶部导航栏 - 模仿Microsoft Store */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background-color: var(--blur-bg);
+            backdrop-filter: blur(10px); /* 亚克力效果 */
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--winui-elevation-4);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-right: 40px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 12px;
+            color: var(--accent-color);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            height: 100%;
+        }
+
+        .nav-item {
+            padding: 0 16px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-item:hover {
+            color: var(--accent-color);
+            background-color: var(--nav-hover);
+        }
+
+        .nav-item.active {
+            color: var(--accent-color);
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--accent-color);
+            animation: underlineAnimation 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        @keyframes underlineAnimation {
+            from {
+                transform: scaleX(0);
+            }
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .section {
+            min-height: calc(100vh - 64px);
+            display: none;
+            padding-top: 20px;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        /* 卡片设计 - WinUI 3风格 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--winui-elevation-8);
+            padding: 30px;
+            transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--winui-elevation-16);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-right: 16px;
+            color: var(--accent-color);
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .card-version {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+
+        .card-divider {
+            height: 1px;
+            background-color: var(--text-secondary);
+            opacity: 0.2;
+            margin: 20px 0;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+
+        .update-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .update-list {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 30px;
+        }
+
+        .update-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .update-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .update-text {
+            flex: 1;
+            color: var(--text-secondary);
+        }
+
+        /* 按钮样式 - WinUI 3风格 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-icon {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-nav {
+                padding: 0 12px;
+            }
+            
+            .logo-text {
+                font-size: 18px;
+            }
+            
+            .nav-item {
+                padding: 0 10px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+            
+            .logo {
+                margin-right: 20px;
+            }
+            
+            .logo-text {
+                display: none;
+            }
+            
+            .nav-item {
+                padding: 0 8px;
+            }
+        }
+
+        /* 首页特定样式 */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(0, 120, 215, 0.1), transparent);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--winui-elevation-4);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hero-text {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .hero-image {
+            width: 40%;
+            max-width: 400px;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+            opacity: 0.9;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--winui-elevation-8);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .feature-text {
+            color: var(--text-secondary);
+            flex: 1;
+        }
+        
+        /* 关于页特定样式 */
+        .about-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text p {
+            margin-bottom: 20px;
+            line-height: 1.7;
+            font-size: 17px;
+            color: var(--text-secondary);
+        }
+        
+        .about-image {
+            width: 300px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--winui-elevation-8);
+        }
+        
+        .contact-info {
+            margin-top: 40px;
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--winui-elevation-8);
+        }
+        
+        .contact-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .contact-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 - 模仿Microsoft Store -->
+    <nav class="top-nav">
+        <div class="logo">
+            <div class="logo-icon">🛠️</div>
+            <div class="logo-text">SNDMLO团队</div>
+        </div>
+        
+        <ul class="nav-list">
+            <li class="nav-item active" data-target="home">
+                <span>首页</span>
+            </li>
+            <li class="nav-item" data-target="download">
+                <span>SNDMLO工具箱下载</span>
+            </li>
+            <li class="nav-item" data-target="about">
+                <span>关于</span>
+            </li>
+        </ul>
+    </nav>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 首页部分 -->
+        <section id="home" class="section active">
+            <h2 class="section-title">SNDMLO工具箱</h2>
+            
+            <div class="hero-section">
+                <div class="hero-text">
+                    <h1 class="hero-title">强大而简洁的工具箱解决方案</h1>
+                    <p class="hero-subtitle">精心设计的工具箱应用，提供多种实用工具，满足您日常的各种需求</p>
+                    <button class="btn" onclick="switchSection('download')">
+                        <span class="btn-icon">📥</span> 立即下载
+                    </button>
+                </div>
+                <div class="hero-image">📦</div>
+            </div>
+            
+            <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 20px;">产品特性</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">多平台兼容</h3>
+                    <p class="feature-text">提供Scratch版和WinUI 3版，满足不同设备和平台的需求</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <h3 class="feature-title">优雅界面</h3>
+                    <p class="feature-text">遵循Microsoft Fluent设计语言，提供直观美观的用户体验</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">高效性能</h3>
+                    <p class="feature-text">优化算法实现，确保在各种环境下都能流畅运行</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🆕</div>
+                    <h3 class="feature-title">持续更新</h3>
+                    <p class="feature-text">定期发布更新，修复漏洞并增加新功能以满足用户需求</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 下载部分 -->
+        <section id="download" class="section">
+            <h2 class="section-title">SNDMLO工具箱下载</h2>
+            
+            <div class="card-grid">
+                <!-- Scratch版 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🐱</div>
+                        <div>
+                            <h3 class="card-title">Scratch版</h3>
+                            <div class="card-version">当前版本: v1.2.4</div>
+                        </div>
+                    </div>
+                    
+                    <p class="card-text">
+                        采用Scratch制作的版本，适配性强，可以在多种平台和设备上运行，
+                        无需复杂安装过程。适合教育环境和个人用户使用。
+                    </p>
+                    
+                    <div class="card-divider"></div>
+                    
+                    <div>
+                        <h4 class="update-title">更新公告</h4>
+                        <ul class="update-list">
+                            <li class="update-item">
+                                <span class="update-badge">无更新</span>
+                                <span class="update-text">当前版本暂无最新更新</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn" onclick="window.open('https://www.bilibili.com')">
+                        <span class="btn-icon">📦</span> 下载 Scratch版
+                    </button>
+                </div>
+                
+                <!-- WinUI 3版 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🪟</div>
+                        <div>
+                            <h3 class="card-title">WinUI 3版</h3>
+                            <div class="card-version">当前版本: v1.3.5</div>
+                        </div>
+                    </div>
+                    
+                    <p class="card-text">
+                        采用C#制作的版本，提供美观的现代化界面和丰富功能。
+                        基于Microsoft最新的WinUI框架，完美支持Windows 10/11系统。
+                    </p>
+                    
+                    <div class="card-divider"></div>
+                    
+                    <div>
+                        <h4 class="update-title">更新公告：V1.3.5更新内容</h4>
+                        <ul class="update-list">
+                            <li class="update-item">
+                                <span class="update-badge">新增</span>
+                                <span class="update-text">为主页边栏添加图标</span>
+                            </li>
+                            <li class="update-item">
+                                <span class="update-badge">移除</span>
+                                <span class="update-text">移除了官网入口</span>
+                            </li>
+                            <li class="update-item">
+                                <span class="update-badge">优化</span>
+                                <span class="update-text">优化设置项布局和功能</span>
+                            </li>
+                        </ul>
+                        
+                        <p style="color: var(--text-secondary); font-style: italic; margin-top: 15px; background: var(--nav-active); padding: 10px; border-radius: 6px;">
+                            注：此版本为1.3.0的分支版本，用来测试图标与新页面是否正常显示
+                        </p>
+                    </div>
+                    
+                    <button class="btn" onclick="window.open('https://www.bilibili.com')">
+                        <span class="btn-icon">📦</span> 下载 WinUI 3版
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 关于部分 -->
+        <section id="about" class="section">
+            <h2 class="section-title">关于我们</h2>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <p>
+                        SNDMLO团队致力于开发高质量的软件工具，为用户提供简单而强大的解决方案。
+                        我们的工具箱应用集合了多种实用工具，旨在提高您的工作效率和解决日常问题。
+                    </p>
+                    
+                    <p>
+                        我们相信，优秀的软件应该是优雅的、高效的且易于使用的。我们的设计理念是将复杂功能简化，
+                        同时保持强大的能力。我们遵循Microsoft Fluent设计规范，
+                        确保用户在任何平台和设备上都能获得一致的体验。
+                    </p>
+                    
+                    <p>
+                        我们的团队成员来自不同的技术背景，但我们有一个共同的目标：创造能够真正帮助用户的产品。
+                        我们重视用户反馈，并持续改进我们的产品。
+                    </p>
+                    
+                    <p>
+                        我们提供两个版本的SNDMLO工具箱：Scratch版适用于教育场景和简单需求，
+                        WinUI 3版则提供完整的桌面体验和更丰富的功能。
+                    </p>
+                </div>
+                <div class="about-image">🌟</div>
+            </div>
+            
+            <div class="contact-info">
+                <h3 class="contact-title">联系我们</h3>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <span>support@sndmlo.com</span>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">🌐</div>
+                    <span>www.sndmlo.com</span>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <span>Bilibili: SNDMLO官方频道</span>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">🐦</div>
+                    <span>Twitter: @sndmlo_team</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化页面
+            updateTheme();
+            
+            // 获取所有导航项和内容部分
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.section');
+            
+            // 导航点击事件处理
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 获取目标部分的ID
+                    const targetId = this.getAttribute('data-target');
+                    
+                    // 更新激活状态的导航项
+                    navItems.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 显示对应的内容部分
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetId) {
+                            setTimeout(() => {
+                                section.classList.add('active');
+                            }, 10);
+                        }
+                    });
+                    
+                    // 滚动到顶部
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+            
+            // 主题切换逻辑
+            function updateTheme() {
+                // CSS变量已通过媒体查询处理，这里不需要额外操作
+                // 当需要在JS中处理更多逻辑时可以扩展
+            }
+            
+            // 监听主题变化
+            const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            darkModeMediaQuery.addEventListener('change', updateTheme);
+            
+            // 初始化主题
+            updateTheme();
+        });
+        
+        // 切换页面部分
+        function switchSection(sectionId) {
+            // 更新激活状态的导航项
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // 激活目标导航项
+            document.querySelector(`.nav-item[data-target="${sectionId}"]`).classList.add('active');
+            
+            // 显示目标部分
+            setTimeout(() => {
+                document.getElementById(sectionId).classList.add('active');
+            }, 10);
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
