@@ -43,12 +43,76 @@
             }
         }
 
+        /* 严格遵循WinUI 3的动画系统 */
+        @keyframes winuiContentEnter {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes winuiCardEnter {
+            0% {
+                opacity: 0;
+                transform: scale(0.98) translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes winuiUnderline {
+            0% {
+                transform: scaleX(0);
+            }
+            100% {
+                transform: scaleX(1);
+            }
+        }
+
+        @keyframes winuiRipple {
+            0% {
+                transform: scale(0);
+                opacity: 0.35;
+            }
+            50% {
+                opacity: 0.25;
+            }
+            100% {
+                transform: scale(10);
+                opacity: 0;
+            }
+        }
+
+        @keyframes winuiPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(var(--accent-color-rgb), 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0);
+            }
+        }
+
+        /* WinUI 3全局动画配置 */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            transition: background-color 0.2s, color 0.2s;
+            transition: 
+                background-color 0.2s cubic-bezier(0.1, 0.9, 0.2, 1), 
+                color 0.2s cubic-bezier(0.1, 0.9, 0.2, 1),
+                transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.1, 0.9, 0.2, 1),
+                border-color 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
         body {
@@ -56,9 +120,10 @@
             color: var(--text-primary);
             padding-top: 64px; /* 为顶部导航栏留出空间 */
             min-height: 100vh;
+            animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
 
-        /* WinUI 3 顶部导航栏 - 模仿Microsoft Store */
+        /* WinUI 3 顶部导航栏 */
         .top-nav {
             position: fixed;
             top: 0;
@@ -66,24 +131,31 @@
             right: 0;
             height: 64px;
             background-color: var(--blur-bg);
-            backdrop-filter: blur(10px); /* 亚克力效果 */
+            backdrop-filter: blur(10px);
             padding: 0 24px;
             display: flex;
             align-items: center;
             box-shadow: var(--winui-elevation-4);
             z-index: 1000;
+            animation: winuiContentEnter 0.3s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
 
         .logo {
             display: flex;
             align-items: center;
             margin-right: 40px;
+            transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
         }
 
         .logo-icon {
             font-size: 28px;
             margin-right: 12px;
             color: var(--accent-color);
+            transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
         .logo-text {
@@ -105,7 +177,6 @@
             position: relative;
             cursor: pointer;
             font-weight: 500;
-            transition: color 0.2s;
         }
 
         .nav-item:hover {
@@ -125,19 +196,10 @@
             right: 0;
             height: 3px;
             background-color: var(--accent-color);
-            animation: underlineAnimation 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+            animation: winuiUnderline 0.3s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
         }
 
-        @keyframes underlineAnimation {
-            from {
-                transform: scaleX(0);
-            }
-            to {
-                transform: scaleX(1);
-            }
-        }
-
-        /* 主内容区域 */
+        /* 主内容区域 - WinUI 3风格动画 */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -148,16 +210,11 @@
             min-height: calc(100vh - 64px);
             display: none;
             padding-top: 20px;
+            animation: winuiContentEnter 0.4s cubic-bezier(0.3, 0, 0.8, 0.15) backwards;
         }
 
         .section.active {
             display: block;
-            animation: fadeIn 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .section-title {
@@ -165,6 +222,7 @@
             font-weight: 700;
             margin-bottom: 28px;
             position: relative;
+            animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) 0.1s backwards;
         }
 
         .section-title::after {
@@ -176,9 +234,10 @@
             height: 4px;
             background-color: var(--accent-color);
             border-radius: 2px;
+            animation: winuiUnderline 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s backwards;
         }
 
-        /* 卡片设计 - WinUI 3风格 */
+        /* 卡片设计 - WinUI 3动画风格 */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -191,11 +250,19 @@
             border-radius: var(--border-radius);
             box-shadow: var(--winui-elevation-8);
             padding: 30px;
-            transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
             position: relative;
             overflow: hidden;
+            animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
 
+        .card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
         .card:hover {
             transform: translateY(-5px);
             box-shadow: var(--winui-elevation-16);
@@ -211,6 +278,11 @@
             font-size: 32px;
             margin-right: 16px;
             color: var(--accent-color);
+            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1);
         }
 
         .card-title {
@@ -256,7 +328,12 @@
         .update-item {
             display: flex;
             margin-bottom: 10px;
+            animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+
+        .update-item:nth-child(1) { animation-delay: 0.1s; }
+        .update-item:nth-child(2) { animation-delay: 0.15s; }
+        .update-item:nth-child(3) { animation-delay: 0.2s; }
 
         .update-badge {
             display: inline-block;
@@ -276,7 +353,7 @@
             color: var(--text-secondary);
         }
 
-        /* 按钮样式 - WinUI 3风格 */
+        /* 按钮样式 - WinUI 3风格动画 */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -289,9 +366,31 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 16px;
-            transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
             overflow: hidden;
             position: relative;
+            animation: winuiCardEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
+        }
+
+        .btn.pulse {
+            animation: winuiPulse 2s infinite;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn:not(:active)::after {
+            animation: winuiRipple 0.6s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
         .btn:hover {
@@ -307,6 +406,11 @@
         .btn-icon {
             margin-right: 10px;
             font-size: 20px;
+            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .btn:active .btn-icon {
+            transform: translateY(2px);
         }
 
         /* 响应式设计 */
@@ -357,6 +461,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s backwards;
         }
 
         .hero-text {
@@ -368,12 +473,14 @@
             font-weight: 700;
             margin-bottom: 20px;
             line-height: 1.2;
+            animation: winuiContentEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.3s backwards;
         }
 
         .hero-subtitle {
             font-size: 20px;
             color: var(--text-secondary);
             margin-bottom: 30px;
+            animation: winuiContentEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.4s backwards;
         }
 
         .hero-image {
@@ -381,6 +488,7 @@
             max-width: 400px;
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
             opacity: 0.9;
+            animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.5s backwards;
         }
 
         .feature-grid {
@@ -398,8 +506,13 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+            animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.15s; }
+        .feature-card:nth-child(3) { animation-delay: 0.2s; }
+        .feature-card:nth-child(4) { animation-delay: 0.25s; }
 
         .feature-card:hover {
             transform: translateY(-8px);
@@ -409,6 +522,11 @@
             font-size: 32px;
             color: var(--accent-color);
             margin-bottom: 20px;
+            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
         }
 
         .feature-title {
@@ -439,12 +557,19 @@
             line-height: 1.7;
             font-size: 17px;
             color: var(--text-secondary);
+            animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+        
+        .about-text p:nth-child(1) { animation-delay: 0.1s; }
+        .about-text p:nth-child(2) { animation-delay: 0.15s; }
+        .about-text p:nth-child(3) { animation-delay: 0.2s; }
+        .about-text p:nth-child(4) { animation-delay: 0.25s; }
         
         .about-image {
             width: 300px;
             border-radius: var(--border-radius);
             box-shadow: var(--winui-elevation-8);
+            animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.3s backwards;
         }
         
         .contact-info {
@@ -453,6 +578,7 @@
             border-radius: var(--border-radius);
             padding: 30px;
             box-shadow: var(--winui-elevation-8);
+            animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.4s backwards;
         }
         
         .contact-title {
@@ -466,7 +592,13 @@
             display: flex;
             align-items: center;
             margin-bottom: 15px;
+            animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+        
+        .contact-item:nth-child(1) { animation-delay: 0.1s; }
+        .contact-item:nth-child(2) { animation-delay: 0.15s; }
+        .contact-item:nth-child(3) { animation-delay: 0.2s; }
+        .contact-item:nth-child(4) { animation-delay: 0.25s; }
         
         .contact-icon {
             font-size: 24px;
@@ -476,10 +608,10 @@
     </style>
 </head>
 <body>
-    <!-- 顶部导航栏 - 模仿Microsoft Store -->
+    <!-- 顶部导航栏 -->
     <nav class="top-nav">
         <div class="logo">
-            <div class="logo-icon">🛠️</div>
+            <div class="logo-icon"> </div>
             <div class="logo-text">SNDMLO团队</div>
         </div>
         
@@ -506,14 +638,14 @@
                 <div class="hero-text">
                     <h1 class="hero-title">强大而简洁的工具箱解决方案</h1>
                     <p class="hero-subtitle">精心设计的工具箱应用，提供多种实用工具，满足您日常的各种需求</p>
-                    <button class="btn" onclick="switchSection('download')">
+                    <button class="btn pulse" onclick="switchSection('download')">
                         <span class="btn-icon">📥</span> 立即下载
                     </button>
                 </div>
-                <div class="hero-image">📦</div>
+                <div class="hero-image"> </div>
             </div>
             
-            <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 20px;">产品特性</h2>
+            <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 20px; animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s backwards;">产品特性</h2>
             
             <div class="feature-grid">
                 <div class="feature-card">
@@ -558,8 +690,8 @@
                     </div>
                     
                     <p class="card-text">
-                        采用Scratch制作的版本，适配性强，可以在多种平台和设备上运行，
-                        无需复杂安装过程。适合教育环境和个人用户使用。
+                        采用Scratch制作的版本，适配性强，可以在多种平台和设备上运行
+                        无需复杂安装过程，适合windows7以上的用户使用
                     </p>
                     
                     <div class="card-divider"></div>
@@ -613,7 +745,7 @@
                             </li>
                         </ul>
                         
-                        <p style="color: var(--text-secondary); font-style: italic; margin-top: 15px; background: var(--nav-active); padding: 10px; border-radius: 6px;">
+                        <p style="color: var(--text-secondary); font-style: italic; margin-top: 15px; background: var(--nav-active); padding: 10px; border-radius: 6px; animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s backwards;">
                             注：此版本为1.3.0的分支版本，用来测试图标与新页面是否正常显示
                         </p>
                     </div>
@@ -637,55 +769,74 @@
                     </p>
                     
                     <p>
-                        我们相信，优秀的软件应该是优雅的、高效的且易于使用的。我们的设计理念是将复杂功能简化，
+                        我们相信，优秀的软件应该是优雅的、高效的简洁的、且易于使用的。我们的设计理念是将复杂功能简化，
                         同时保持强大的能力。我们遵循Microsoft Fluent设计规范，
                         确保用户在任何平台和设备上都能获得一致的体验。
                     </p>
                     
                     <p>
-                        我们的团队成员来自不同的技术背景，但我们有一个共同的目标：创造能够真正帮助用户的产品。
+                        我们的团队成员来自不同的渠道，有着不同的故事，但我们有一个共同的目标：创造能够真正帮助用户的产品。
                         我们重视用户反馈，并持续改进我们的产品。
                     </p>
                     
                     <p>
-                        我们提供两个版本的SNDMLO工具箱：Scratch版适用于教育场景和简单需求，
+                        我们提供两个版本的SNDMLO工具箱：Scratch版适用于适配性与简单需求，
                         WinUI 3版则提供完整的桌面体验和更丰富的功能。
                     </p>
                 </div>
-                <div class="about-image">🌟</div>
+                <div class="about-image"> </div>
             </div>
             
             <div class="contact-info">
-                <h3 class="contact-title">联系我们</h3>
+                <h3 class="contact-title">联系与反馈</h3>
                 
                 <div class="contact-item">
-                    <div class="contact-icon">📧</div>
-                    <span>support@sndmlo.com</span>
+                    <div class="contact-icon">📧官方邮箱</div>
+                    <span>无</span>
                 </div>
                 
                 <div class="contact-item">
-                    <div class="contact-icon">🌐</div>
-                    <span>www.sndmlo.com</span>
+                    <div class="contact-icon">🌐官网</div>
+                    <span>无</span>
                 </div>
                 
                 <div class="contact-item">
-                    <div class="contact-icon">📱</div>
-                    <span>Bilibili: SNDMLO官方频道</span>
+                    <div class="contact-icon">📱社交平台</div>
+                    <span>Bilibili: SNDML科技</span>
                 </div>
                 
                 <div class="contact-item">
-                    <div class="contact-icon">🐦</div>
-                    <span>Twitter: @sndmlo_team</span>
+                    <div class="contact-icon">特别鸣谢</div>
+                    <span>一路支持我们的各位</span>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
+        // 为颜色变量添加RGBA支持
         document.addEventListener('DOMContentLoaded', function() {
-            // 初始化页面
-            updateTheme();
+            const computedStyle = getComputedStyle(document.documentElement);
+            const accentColor = computedStyle.getPropertyValue('--accent-color').trim();
             
+            // 转换为RGB格式
+            const tempDiv = document.createElement('div');
+            tempDiv.style.color = accentColor;
+            document.body.appendChild(tempDiv);
+            const rgb = getComputedStyle(tempDiv).color;
+            document.body.removeChild(tempDiv);
+            
+            const matches = rgb.match(/(\d+),\s*(\d+),\s*(\d+)/);
+            if (matches) {
+                document.documentElement.style.setProperty('--accent-color-rgb', `${matches[1]}, ${matches[2]}, ${matches[3]}`);
+            }
+            
+            // 修复导航栏点击问题
+            setupNavigation();
+        });
+
+        // 修复导航栏点击问题
+        function setupNavigation() {
             // 获取所有导航项和内容部分
             const navItems = document.querySelectorAll('.nav-item');
             const sections = document.querySelectorAll('.section');
@@ -714,41 +865,63 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             });
-            
-            // 主题切换逻辑
-            function updateTheme() {
-                // CSS变量已通过媒体查询处理，这里不需要额外操作
-                // 当需要在JS中处理更多逻辑时可以扩展
-            }
-            
-            // 监听主题变化
-            const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            darkModeMediaQuery.addEventListener('change', updateTheme);
-            
-            // 初始化主题
-            updateTheme();
-        });
-        
-        // 切换页面部分
+        }
+
+        // 导航控制函数
         function switchSection(sectionId) {
-            // 更新激活状态的导航项
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => item.classList.remove('active'));
+            // 移除原有活动类
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
             
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
             
-            // 激活目标导航项
+            // 添加新活动类
             document.querySelector(`.nav-item[data-target="${sectionId}"]`).classList.add('active');
             
-            // 显示目标部分
             setTimeout(() => {
                 document.getElementById(sectionId).classList.add('active');
+                
+                // 添加WinUI 3风格的回弹动画
+                document.getElementById(sectionId).style.animation = 'none';
+                setTimeout(() => {
+                    document.getElementById(sectionId).style.animation = 'winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1)';
+                }, 10);
             }, 10);
             
             // 滚动到顶部
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+        
+        // 按钮涟漪效果
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'winuiRipple 0.6s linear';
+                ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+                
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
     </script>
 </body>
 </html>
