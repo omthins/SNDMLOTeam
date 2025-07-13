@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNDMLO团队</title>
+    <title>SNDML团队</title>
     <style>
         :root {
             /* WinUI 3 设计变量 */
@@ -24,6 +24,18 @@
             --nav-hover: rgba(0, 0, 0, 0.04);
             --blur-bg: rgba(255, 255, 255, 0.6);
             --card-hover: rgba(0, 0, 0, 0.02);
+            
+            /* Material Design 变量 */
+            --mdc-primary: #6200ee;
+            --mdc-surface: #ffffff;
+            --mdc-text-primary: #000000;
+            --mdc-text-secondary: #666666;
+            --mdc-card-radius: 12px;
+            --mdc-button-radius: 20px;
+            --mdc-shadow-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --mdc-shadow-2: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            --mdc-shadow-3: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+            --mdc-nav-height: 56px;
         }
 
         /* 深色主题变量 */
@@ -40,6 +52,12 @@
                 --nav-hover: rgba(255, 255, 255, 0.05);
                 --blur-bg: rgba(45, 45, 45, 0.6);
                 --card-hover: rgba(255, 255, 255, 0.03);
+                
+                /* Material Design 深色主题 */
+                --mdc-primary: #bb86fc;
+                --mdc-surface: #121212;
+                --mdc-text-primary: #ffffff;
+                --mdc-text-secondary: #bbbbbb;
             }
         }
 
@@ -100,6 +118,20 @@
                 box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0);
             }
         }
+        
+        /* Material Design 涟漪动画 */
+        @keyframes mdcRipple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        /* 加载动画 */
+        @keyframes winuiSpinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         /* WinUI 3全局动画配置 */
         * {
@@ -122,6 +154,54 @@
             min-height: 100vh;
             animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+        
+        /* Material Design 适配 */
+        body.android {
+            --accent-color: var(--mdc-primary);
+            --text-primary: var(--mdc-text-primary);
+            --text-secondary: var(--mdc-text-secondary);
+            --bg-secondary: var(--mdc-surface);
+            --border-radius: var(--mdc-card-radius);
+            --nav-active: rgba(98, 0, 238, 0.1);
+            
+            padding-top: var(--mdc-nav-height);
+        }
+        
+        /* 加载屏幕 */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 120, 215, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: winuiSpinner 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        body.android .loading-spinner {
+            border-top-color: var(--mdc-primary);
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
 
         /* WinUI 3 顶部导航栏 */
         .top-nav {
@@ -139,12 +219,24 @@
             z-index: 1000;
             animation: winuiContentEnter 0.3s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+        
+        body.android .top-nav {
+            height: var(--mdc-nav-height);
+            background-color: var(--mdc-surface);
+            box-shadow: var(--mdc-shadow-1);
+            backdrop-filter: none;
+            padding: 0 16px;
+        }
 
         .logo {
             display: flex;
             align-items: center;
             margin-right: 40px;
             transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+        
+        body.android .logo {
+            margin-right: 24px;
         }
 
         .logo:hover {
@@ -157,16 +249,29 @@
             color: var(--accent-color);
             transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
+        
+        body.android .logo-icon {
+            color: var(--mdc-primary);
+        }
 
         .logo-text {
             font-size: 20px;
             font-weight: 600;
+        }
+        
+        body.android .logo-text {
+            font-size: 18px;
         }
 
         .nav-list {
             list-style: none;
             display: flex;
             height: 100%;
+        }
+        
+        body.android .nav-list {
+            font-weight: 500;
+            font-size: 14px;
         }
 
         .nav-item {
@@ -178,14 +283,27 @@
             cursor: pointer;
             font-weight: 500;
         }
+        
+        body.android .nav-item {
+            padding: 0 12px;
+            font-size: 14px;
+        }
 
         .nav-item:hover {
             color: var(--accent-color);
             background-color: var(--nav-hover);
         }
+        
+        body.android .nav-item:hover {
+            color: var(--mdc-primary);
+        }
 
         .nav-item.active {
             color: var(--accent-color);
+        }
+        
+        body.android .nav-item.active {
+            color: var(--mdc-primary);
         }
 
         .nav-item.active::after {
@@ -198,6 +316,23 @@
             background-color: var(--accent-color);
             animation: winuiUnderline 0.3s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
         }
+        
+        body.android .nav-item.active::after {
+            background-color: var(--mdc-primary);
+        }
+        
+        /* 移动端菜单按钮 */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        
+        body.android .mobile-menu-btn {
+            display: block;
+            color: var(--mdc-text-primary);
+        }
 
         /* 主内容区域 - WinUI 3风格动画 */
         .main-content {
@@ -205,12 +340,20 @@
             margin: 0 auto;
             padding: 24px;
         }
+        
+        body.android .main-content {
+            padding: 16px;
+        }
 
         .section {
             min-height: calc(100vh - 64px);
             display: none;
             padding-top: 20px;
             animation: winuiContentEnter 0.4s cubic-bezier(0.3, 0, 0.8, 0.15) backwards;
+        }
+        
+        body.android .section {
+            min-height: calc(100vh - var(--mdc-nav-height));
         }
 
         .section.active {
@@ -224,6 +367,12 @@
             position: relative;
             animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) 0.1s backwards;
         }
+        
+        body.android .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
 
         .section-title::after {
             content: '';
@@ -236,6 +385,11 @@
             border-radius: 2px;
             animation: winuiUnderline 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s backwards;
         }
+        
+        body.android .section-title::after {
+            background-color: var(--mdc-primary);
+            height: 3px;
+        }
 
         /* 卡片设计 - WinUI 3动画风格 */
         .card-grid {
@@ -243,6 +397,11 @@
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 24px;
             margin-top: 20px;
+        }
+        
+        body.android .card-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
 
         .card {
@@ -254,6 +413,12 @@
             overflow: hidden;
             animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+        
+        body.android .card {
+            box-shadow: var(--mdc-shadow-1);
+            padding: 20px;
+            border-radius: var(--mdc-card-radius);
+        }
 
         .card:nth-child(1) {
             animation-delay: 0.1s;
@@ -262,10 +427,14 @@
         .card:nth-child(2) {
             animation-delay: 0.2s;
         }
-        
+
         .card:hover {
             transform: translateY(-5px);
             box-shadow: var(--winui-elevation-16);
+        }
+        
+        body.android .card:hover {
+            box-shadow: var(--mdc-shadow-2);
         }
 
         .card-header {
@@ -273,12 +442,21 @@
             align-items: center;
             margin-bottom: 20px;
         }
+        
+        body.android .card-header {
+            margin-bottom: 16px;
+        }
 
         .card-icon {
             font-size: 32px;
             margin-right: 16px;
             color: var(--accent-color);
             transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+        
+        body.android .card-icon {
+            color: var(--mdc-primary);
+            font-size: 28px;
         }
 
         .card:hover .card-icon {
@@ -290,12 +468,21 @@
             font-weight: 600;
             color: var(--accent-color);
         }
+        
+        body.android .card-title {
+            color: var(--mdc-primary);
+            font-size: 20px;
+        }
 
         .card-version {
             font-size: 14px;
             color: var(--text-secondary);
             margin-top: 4px;
             margin-bottom: 16px;
+        }
+        
+        body.android .card-version {
+            font-size: 13px;
         }
 
         .card-divider {
@@ -304,12 +491,21 @@
             opacity: 0.2;
             margin: 20px 0;
         }
+        
+        body.android .card-divider {
+            margin: 16px 0;
+        }
 
         .card-text {
             color: var(--text-secondary);
             line-height: 1.6;
             font-size: 16px;
             margin-bottom: 24px;
+        }
+        
+        body.android .card-text {
+            font-size: 14px;
+            margin-bottom: 20px;
         }
 
         .update-title {
@@ -318,17 +514,29 @@
             margin-bottom: 10px;
             color: var(--text-primary);
         }
+        
+        body.android .update-title {
+            font-size: 16px;
+        }
 
         .update-list {
             list-style: none;
             padding-left: 0;
             margin-bottom: 30px;
         }
+        
+        body.android .update-list {
+            margin-bottom: 24px;
+        }
 
         .update-item {
             display: flex;
             margin-bottom: 10px;
             animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
+        }
+        
+        body.android .update-item {
+            font-size: 14px;
         }
 
         .update-item:nth-child(1) { animation-delay: 0.1s; }
@@ -346,6 +554,10 @@
             margin-right: 10px;
             min-width: 60px;
             text-align: center;
+        }
+        
+        body.android .update-badge {
+            background-color: var(--mdc-primary);
         }
 
         .update-text {
@@ -370,6 +582,14 @@
             position: relative;
             animation: winuiCardEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+        
+        body.android .btn {
+            background-color: var(--mdc-primary);
+            border-radius: var(--mdc-button-radius);
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
         .btn.pulse {
             animation: winuiPulse 2s infinite;
@@ -392,11 +612,20 @@
         .btn:not(:active)::after {
             animation: winuiRipple 0.6s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
+        
+        body.android .btn::after {
+            background: rgba(255, 255, 255, 0.4);
+            animation: mdcRipple 0.6s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
 
         .btn:hover {
             background-color: var(--accent-color);
             box-shadow: 0 0 15px rgba(var(--accent-color-rgb), 0.4);
             transform: translateY(-2px);
+        }
+        
+        body.android .btn:hover {
+            box-shadow: var(--mdc-shadow-2);
         }
 
         .btn:active {
@@ -413,27 +642,82 @@
             transform: translateY(2px);
         }
 
-        /* 响应式设计 */
+        /* 响应式设计 - 平板 */
+        @media (max-width: 1024px) {
+            .hero-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .hero-text {
+                margin-bottom: 40px;
+                max-width: 100%;
+            }
+            
+            .hero-image {
+                width: 60%;
+                margin: 0 auto;
+            }
+        }
+
+        /* 响应式设计 - 移动设备 */
         @media (max-width: 768px) {
             .card-grid {
                 grid-template-columns: 1fr;
             }
             
             .top-nav {
-                padding: 0 12px;
+                padding: 0 16px;
+                height: 60px;
             }
             
             .logo-text {
                 font-size: 18px;
             }
             
-            .nav-item {
-                padding: 0 10px;
-                font-size: 14px;
+            .nav-list {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--blur-bg);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                height: auto;
+                box-shadow: var(--winui-elevation-8);
+                z-index: 999;
             }
-        }
-
-        @media (max-width: 480px) {
+            
+            body.android .nav-list {
+                background: var(--mdc-surface);
+                box-shadow: var(--mdc-shadow-2);
+            }
+            
+            .nav-list.mobile-active {
+                display: flex;
+                animation: winuiContentEnter 0.3s ease;
+            }
+            
+            .nav-item {
+                height: 60px;
+                width: 100%;
+                padding: 0 24px;
+                justify-content: flex-start;
+            }
+            
+            body.android .nav-item {
+                height: 56px;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .section-title {
+                font-size: 28px;
+            }
+            
             .card {
                 padding: 20px;
             }
@@ -442,12 +726,91 @@
                 margin-right: 20px;
             }
             
+            .nav-item {
+                padding: 0 12px;
+                font-size: 16px;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .main-content {
+                padding: 16px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 15px;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                width: 100%;
+                max-width: 400px;
+                margin: 20px auto 0;
+            }
+        }
+
+        @media (max-width: 480px) {
             .logo-text {
                 display: none;
             }
             
-            .nav-item {
-                padding: 0 8px;
+            .hero-title {
+                font-size: 28px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .card-title {
+                font-size: 22px;
+            }
+            
+            .card-text {
+                font-size: 15px;
+            }
+            
+            .feature-title {
+                font-size: 18px;
+            }
+            
+            .feature-text {
+                font-size: 15px;
+            }
+            
+            body {
+                padding-top: 60px;
+            }
+        }
+        
+        /* 高DPI设备特殊处理 */
+        @media 
+        (-webkit-min-device-pixel-ratio: 2), 
+        (min-resolution: 192dpi) { 
+            .card {
+                padding: 25px;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .section-title {
+                font-size: 28px;
             }
         }
 
@@ -463,9 +826,18 @@
             justify-content: space-between;
             animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s backwards;
         }
+        
+        body.android .hero-section {
+            background: linear-gradient(135deg, rgba(98, 0, 238, 0.1), transparent);
+            box-shadow: var(--mdc-shadow-1);
+        }
 
         .hero-text {
             max-width: 600px;
+        }
+        
+        body.android .hero-text {
+            max-width: 100%;
         }
 
         .hero-title {
@@ -475,12 +847,21 @@
             line-height: 1.2;
             animation: winuiContentEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.3s backwards;
         }
+        
+        body.android .hero-title {
+            font-size: 28px;
+        }
 
         .hero-subtitle {
             font-size: 20px;
             color: var(--text-secondary);
             margin-bottom: 30px;
             animation: winuiContentEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.4s backwards;
+        }
+        
+        body.android .hero-subtitle {
+            font-size: 16px;
+            margin-bottom: 24px;
         }
 
         .hero-image {
@@ -490,12 +871,23 @@
             opacity: 0.9;
             animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.5s backwards;
         }
+        
+        body.android .hero-image {
+            width: 60%;
+            max-width: 300px;
+            margin-top: 20px;
+        }
 
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 24px;
             margin-top: 40px;
+        }
+        
+        body.android .feature-grid {
+            margin-top: 30px;
+            gap: 16px;
         }
 
         .feature-card {
@@ -508,6 +900,11 @@
             height: 100%;
             animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
+        
+        body.android .feature-card {
+            box-shadow: var(--mdc-shadow-1);
+            padding: 20px;
+        }
 
         .feature-card:nth-child(1) { animation-delay: 0.1s; }
         .feature-card:nth-child(2) { animation-delay: 0.15s; }
@@ -517,12 +914,22 @@
         .feature-card:hover {
             transform: translateY(-8px);
         }
+        
+        body.android .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--mdc-shadow-2);
+        }
 
         .feature-icon {
             font-size: 32px;
             color: var(--accent-color);
             margin-bottom: 20px;
             transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+        
+        body.android .feature-icon {
+            color: var(--mdc-primary);
+            font-size: 28px;
         }
 
         .feature-card:hover .feature-icon {
@@ -534,10 +941,18 @@
             font-weight: 600;
             margin-bottom: 15px;
         }
+        
+        body.android .feature-title {
+            font-size: 18px;
+        }
 
         .feature-text {
             color: var(--text-secondary);
             flex: 1;
+        }
+        
+        body.android .feature-text {
+            font-size: 14px;
         }
         
         /* 关于页特定样式 */
@@ -546,6 +961,12 @@
             align-items: flex-start;
             gap: 40px;
             margin-top: 40px;
+        }
+        
+        body.android .about-content {
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 30px;
         }
         
         .about-text {
@@ -560,6 +981,10 @@
             animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
         }
         
+        body.android .about-text p {
+            font-size: 15px;
+        }
+        
         .about-text p:nth-child(1) { animation-delay: 0.1s; }
         .about-text p:nth-child(2) { animation-delay: 0.15s; }
         .about-text p:nth-child(3) { animation-delay: 0.2s; }
@@ -572,67 +997,47 @@
             animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.3s backwards;
         }
         
-        .contact-info {
-            margin-top: 40px;
-            background-color: var(--bg-secondary);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--winui-elevation-8);
-            animation: winuiCardEnter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) 0.4s backwards;
-        }
-        
-        .contact-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-        }
-        
-        .contact-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) backwards;
-        }
-        
-        .contact-item:nth-child(1) { animation-delay: 0.1s; }
-        .contact-item:nth-child(2) { animation-delay: 0.15s; }
-        .contact-item:nth-child(3) { animation-delay: 0.2s; }
-        .contact-item:nth-child(4) { animation-delay: 0.25s; }
-        
-        .contact-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            color: var(--accent-color);
+        body.android .about-image {
+            width: 100%;
+            max-width: 300px;
+            box-shadow: var(--mdc-shadow-1);
         }
     </style>
 </head>
 <body>
+    <!-- 加载屏幕 -->
+    <div id="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">加载中...</div>
+    </div>
+    
     <!-- 顶部导航栏 -->
     <nav class="top-nav">
         <div class="logo">
-            <div class="logo-icon"> </div>
-            <div class="logo-text">SNDMLO团队</div>
+            <div class="logo-icon">S</div>
+            <div class="logo-text">SNDML团队</div>
         </div>
         
-        <ul class="nav-list">
+        <ul class="nav-list" id="navList">
             <li class="nav-item active" data-target="home">
                 <span>首页</span>
             </li>
             <li class="nav-item" data-target="download">
-                <span>SNDMLO工具箱下载</span>
+                <span>SNDML工具箱下载</span>
             </li>
             <li class="nav-item" data-target="about">
                 <span>关于</span>
             </li>
         </ul>
+        
+        <div class="mobile-menu-btn" id="mobileMenuBtn">☰</div>
     </nav>
     
     <!-- 主内容区域 -->
     <div class="main-content">
         <!-- 首页部分 -->
         <section id="home" class="section active">
-            <h2 class="section-title">SNDMLO工具箱</h2>
+            <h2 class="section-title">SNDML工具箱</h2>
             
             <div class="hero-section">
                 <div class="hero-text">
@@ -657,7 +1062,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">💻</div>
                     <h3 class="feature-title">优雅界面</h3>
-                    <p class="feature-text">遵循Microsoft Fluent设计语言，提供直观美观的用户体验</p>
+                    <p class="feature-text">遵循现代化设计语言，提供直观美观的用户体验</p>
                 </div>
                 
                 <div class="feature-card">
@@ -676,7 +1081,7 @@
         
         <!-- 下载部分 -->
         <section id="download" class="section">
-            <h2 class="section-title">SNDMLO工具箱下载</h2>
+            <h2 class="section-title">SNDML工具箱下载</h2>
             
             <div class="card-grid">
                 <!-- Scratch版 -->
@@ -691,7 +1096,7 @@
                     
                     <p class="card-text">
                         采用Scratch制作的版本，适配性强，可以在多种平台和设备上运行
-                        无需复杂安装过程，适合windows7以上的用户使用
+                        无需复杂安装过程，适合windows7及以上的用户使用
                     </p>
                     
                     <div class="card-divider"></div>
@@ -706,7 +1111,7 @@
                         </ul>
                     </div>
                     
-                    <button class="btn" onclick="window.open('https://www.bilibili.com')">
+                    <button class="btn" onclick="window.open('替换网址')">
                         <span class="btn-icon">📦</span> 下载 Scratch版
                     </button>
                 </div>
@@ -744,13 +1149,9 @@
                                 <span class="update-text">优化设置项布局和功能</span>
                             </li>
                         </ul>
-                        
-                        <p style="color: var(--text-secondary); font-style: italic; margin-top: 15px; background: var(--nav-active); padding: 10px; border-radius: 6px; animation: winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) 0.2s backwards;">
-                            注：此版本为1.3.0的分支版本，用来测试图标与新页面是否正常显示
-                        </p>
                     </div>
                     
-                    <button class="btn" onclick="window.open('https://www.bilibili.com')">
+                    <button class="btn" onclick="window.open('替换网址')">
                         <span class="btn-icon">📦</span> 下载 WinUI 3版
                     </button>
                 </div>
@@ -764,13 +1165,13 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>
-                        SNDMLO团队致力于开发高质量的软件工具，为用户提供简单而强大的解决方案。
+                        SNDML团队致力于开发高质量的软件工具，为用户提供简单而强大的解决方案。
                         我们的工具箱应用集合了多种实用工具，旨在提高您的工作效率和解决日常问题。
                     </p>
                     
                     <p>
                         我们相信，优秀的软件应该是优雅的、高效的简洁的、且易于使用的。我们的设计理念是将复杂功能简化，
-                        同时保持强大的能力。我们遵循Microsoft Fluent设计规范，
+                        同时保持强大的能力。我们遵循现代化设计规范，
                         确保用户在任何平台和设备上都能获得一致的体验。
                     </p>
                     
@@ -780,35 +1181,11 @@
                     </p>
                     
                     <p>
-                        我们提供两个版本的SNDMLO工具箱：Scratch版适用于适配性与简单需求，
+                        我们提供两个版本的SNDML工具箱：Scratch版适用于适配性与简单需求，
                         WinUI 3版则提供完整的桌面体验和更丰富的功能。
                     </p>
                 </div>
                 <div class="about-image"> </div>
-            </div>
-            
-            <div class="contact-info">
-                <h3 class="contact-title">联系与反馈</h3>
-                
-                <div class="contact-item">
-                    <div class="contact-icon">📧官方邮箱</div>
-                    <span>无</span>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-icon">🌐官网</div>
-                    <span>无</span>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-icon">📱社交平台</div>
-                    <span>Bilibili: SNDML科技</span>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-icon">特别鸣谢</div>
-                    <span>一路支持我们的各位</span>
-                </div>
             </div>
         </section>
     </div>
@@ -831,8 +1208,14 @@
                 document.documentElement.style.setProperty('--accent-color-rgb', `${matches[1]}, ${matches[2]}, ${matches[3]}`);
             }
             
-            // 修复导航栏点击问题
+            // 设置导航栏
             setupNavigation();
+            
+            // 设置移动菜单按钮
+            setupMobileMenu();
+            
+            // 模拟假加载并检测设备
+            simulateDeviceDetection();
         });
 
         // 修复导航栏点击问题
@@ -861,9 +1244,22 @@
                         }
                     });
                     
+                    // 移动端关闭菜单
+                    document.getElementById('navList').classList.remove('mobile-active');
+                    
                     // 滚动到顶部
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
+            });
+        }
+        
+        // 设置移动端菜单
+        function setupMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navList = document.getElementById('navList');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                navList.classList.toggle('mobile-active');
             });
         }
 
@@ -890,6 +1286,9 @@
                     document.getElementById(sectionId).style.animation = 'winuiContentEnter 0.4s cubic-bezier(0.1, 0.9, 0.2, 1)';
                 }, 10);
             }, 10);
+            
+            // 移动端关闭菜单
+            document.getElementById('navList').classList.remove('mobile-active');
             
             // 滚动到顶部
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -922,6 +1321,36 @@
                 }, 600);
             });
         });
+        
+        // 模拟设备检测
+        function simulateDeviceDetection() {
+            setTimeout(() => {
+                // 获取设备信息
+                const dpi = window.devicePixelRatio;
+                const width = window.innerWidth;
+                
+                // 基于DPI检测安卓设备
+                let isAndroid = false;
+                
+                // 高DPI移动设备检测（典型的安卓设备DPI >= 1.5且宽度较小）
+                if (dpi >= 1.5 && width <= 768) {
+                    isAndroid = true;
+                }
+                
+                // 添加设备类型到body类名
+                if (isAndroid) {
+                    document.body.classList.add('android');
+                } else {
+                    document.body.classList.add('desktop');
+                }
+                
+                // 隐藏加载屏幕
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.visibility = 'hidden';
+                
+            }, 1500); // 模拟1.5秒加载时间
+        }
     </script>
 </body>
 </html>
