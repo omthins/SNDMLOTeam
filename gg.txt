@@ -43,7 +43,7 @@
 
 ### 图片嵌入
 ![WinUI Logo](https://raw.githubusercontent.com/microsoft/microsoft-ui-xaml/main/asset/WindowsControlsLogo.png)  
-相对路径测试: `![本地图片](./assets/StoreLogo.png)`（需项目中有此文件）
+相对路径测试: ![本地图片](./assets/StoreLogo.png)（需项目中有此文件）
 
 ---
 
@@ -88,15 +88,15 @@ public MainPage()
 
 ## 🔍 7. 视频嵌入测试（核心验证）
 ### 本地MP4文件
-`![](assets/123.mp4)`  
+![](assets/123.mp4)
 （需在项目中创建assets文件夹并添加MP4文件）
 
 ### 远程MP4链接
-`![](https://omthins.github.io/SNDMLOTeam/123.mp4)`
+![](https://omthins.github.io/SNDMLOTeam/123.mp4)
 
 ### 平台视频（将渲染为超链接）
-YouTube: `[观看教程](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`  
-Bilibili: `[B站视频](https://www.bilibili.com/video/BV1GJ411x7h7)`
+YouTube: [观看教程](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+Bilibili: [B站视频](https://www.bilibili.com/video/BV1GJ411x7h7)
 
 ### 自定义格式测试
 WebM测试: `![](video.webm)` ❌ 应失败  
