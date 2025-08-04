@@ -1,41 +1,133 @@
-# 欢迎使用 SNDMLO 工具箱 WinUI 版
-感谢您选择我们的多合一效率工具！我们致力于提供简洁高效的功能，助您轻松完成系统维护与创意任务。
+# CommunityToolkit Markdown 全功能测试文档
+
+## ✅ 1. 标题与文本样式
+### 三级标题
+#### 四级标题
+
+**粗体文本**  
+*斜体文本*  
+~~删除线文本~~  
+混合样式：**粗体*与斜体*结合**  
+行内代码：`Console.WriteLine("Hello WinUI");`  
+普通段落文本，测试自动换行与段落间距（注意此处需长文本填充以测试自动换行效果：Community Toolkit 提供了强大的 Markdown 解析能力，可在 WinUI 3 应用中高效渲染富文本内容，支持大部分常用语法）。
 
 ---
 
-## 核心功能一览
+## ✅ 2. 列表系统
+### 无序列表
+- 列表项 1
+- 列表项 2
+  - 嵌套子项 (缩进2空格)
+  - 子项 B
+    - 三级嵌套 (缩进4空格)
+- 列表项 3
 
-### 1. **沉浸式视觉体验**  
-精心设计的简洁首页，带来直观舒适的操作界面。
+### 有序列表
+1. 第一项
+2. 第二项
+   1. 嵌套有序项 (缩进3空格)
+   2. 子项
+3. 第三项
 
-### 2. 系统镜像下载  
-- 精选主流系统镜像资源  
-- 即点即达，极速下载  
-
-### 3. 密钥生成 & 文本分割  
-- **高强度密码生成器**：勾选需求 → 设置长度 → 秒获高安全性密钥  
-- 文本分割工具：快速拆分大型文件  
-- 安全策略：**离开页面或关闭应用时自动清空密钥**，保障信息安全(绝对不是因为bug不想修)
-
-### 4.内置 **Kimi 智能助手**  
-- AI技术支持  
-- 随时解决系统问题 / 技术咨询  
-
-### 5. 更多好玩的工具   
-- **函数绘制器**：可视化数学函数图像  
-- **视频损坏器**：测试视频文件修复能力
-我们在工具箱里面留了一些彩蛋，如果你可以找到，说不定会有什么惊喜哦
+### 任务列表
+- [x] 已完成任务
+- [ ] 未完成任务
+  - [x] 嵌套的完成项
 
 ---
-## 🐞反馈与支持
-遇到问题？期待您的建议！  
-- UI 缩放异常 / 动画缺失等 Bug  
-- 功能优化建议  
-- 新功能提案  
 
-**反馈渠道**：  
- 前往应用内「设置」> 反馈入口  
-加入官方交流群 `[群号待填写]`
-> 每一位用户的建议都是我们进步的动力！
+## ✅ 3. 链接与媒体
+### 超链接
+[Microsoft 官网](https://www.microsoft.com)  
+自动检测URL: https://github.com/CommunityToolkit/WindowsCommunityToolkit
+
+### 图片嵌入
+![WinUI Logo](https://raw.githubusercontent.com/microsoft/microsoft-ui-xaml/main/asset/WindowsControlsLogo.png)  
+相对路径测试: `![本地图片](./assets/StoreLogo.png)`（需项目中有此文件）
+
 ---
-**SNDMLO工具箱v1.0.0 | WinUI版本**  
+
+## ✅ 4. 区块与分割
+> 这是引用区块  
+> 多行引用内容演示  
+> **支持加粗等样式**
+
+---
+
+## ✅ 5. 表格
+| 功能         | 支持状态 | 备注                 |
+|--------------|----------|----------------------|
+| 基础表格     | ✅        | 对齐方式可能受限     |
+| **粗体表头** | ⚠️        | 支持但不保证样式一致 |
+| 跨列合并     | ❌        | 不支持复杂表格       |
+
+---
+
+## ✅ 6. 代码块
+### 行内代码
+调用 `InitializeComponent()` 方法
+
+### 多行代码
+```csharp
+public MainPage()
+{
+    this.InitializeComponent();
+    // CommunityToolkit Markdown 渲染测试
+    MarkdownTextBlock.Text = "# WinUI Rocks!";
+}
+```
+
+```xml
+<Page x:Class="TestApp.MainPage"
+      xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls">
+    <controls:MarkdownTextBlock Text="{x:Bind MarkdownContent}"/>
+</Page>
+```
+
+---
+
+## 🔍 7. 视频嵌入测试（核心验证）
+### 本地MP4文件
+`![](assets/123.mp4)`  
+（需在项目中创建assets文件夹并添加MP4文件）
+
+### 远程MP4链接
+`![](https://omthins.github.io/SNDMLOTeam/123.mp4)`
+
+### 平台视频（将渲染为超链接）
+YouTube: `[观看教程](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`  
+Bilibili: `[B站视频](https://www.bilibili.com/video/BV1GJ411x7h7)`
+
+### 自定义格式测试
+WebM测试: `![](video.webm)` ❌ 应失败  
+无后缀文件: `![](video)` ❌ 应失败
+
+---
+
+## ✅ 8. 其它元素
+水平线：下方需显示分隔线
+---
+
+Emoji 支持：  
+:smile: :thumbsup: :warning: → 😄 👍 ⚠️
+
+脚注示例[1](@ref)
+
+[1](@ref): 这是脚注内容。CommunityToolkit 支持基本脚注功能
+
+---
+
+## 🧪 测试要点总结
+1. **视频功能验证**：
+   - ✔️ MP4本地/远程播放
+   - ❌ 非MP4格式应显示错误占位符
+   - 🔗 平台链接转为可点击超链接
+
+2. **样式一致性**：
+   - 各级标题大小差异
+   - 列表缩进是否正常
+   - 表格边框可见性
+
+3. **性能注意**：
+   - 多个视频同时加载时的内存占用
+   - 长文档滚动流畅度
